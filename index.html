@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FamilyTracker — Семейный планировщик</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo">🏠 FamilyTracker</div>
+    <nav class="nav">
+      <button class="nav-btn active" data-page="dashboard">Главная</button>
+      <button class="nav-btn" data-page="reminders">Напоминания</button>
+      <button class="nav-btn" data-page="calendar">Календарь</button>
+      <button class="nav-btn" data-page="family">Семья</button>
+    </nav>
+    <button class="btn-primary" id="openModal">+ Добавить</button>
+  </header>
+
+  <!-- DASHBOARD -->
+  <main id="page-dashboard" class="page active">
+    <h1>Дашборд</h1>
+    <div class="counters" id="counters"></div>
+    <h2>Срочные задачи</h2>
+    <div class="task-list" id="urgent-list"></div>
+  </main>
+
+  <!-- REMINDERS -->
+  <main id="page-reminders" class="page">
+    <h1>Напоминания</h1>
+    <div class="filters">
+      <select id="filter-category">
+        <option value="">Все категории</option>
+        <option value="jkh">ЖКХ</option>
+        <option value="tax">Налоги</option>
+        <option value="school">Школа</option>
+      </select>
+      <select id="filter-person">
+        <option value="">Все</option>
+        <option value="Папа">Папа</option>
+        <option value="Мама">Мама</option>
+        <option value="9 класс">9 класс</option>
+        <option value="5 класс">5 класс</option>
+        <option value="3 класс">3 класс</option>
+      </select>
+    </div>
+    <div class="task-list" id="all-list"></div>
+  </main>
+
+  <!-- CALENDAR -->
+  <main id="page-calendar" class="page">
+    <h1>Календарь</h1>
+    <div class="cal-nav">
+      <button id="cal-prev">‹</button>
+      <span id="cal-title"></span>
+      <button id="cal-next">›</button>
+    </div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+    <div id="cal-day-events" class="cal-day-events"></div>
+  </main>
+
+  <!-- FAMILY -->
+  <main id="page-family" class="page">
+    <h1>Семья</h1>
+    <div class="family-grid" id="family-grid"></div>
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <h2 id="modal-title">Добавить напоминание</h2>
+      <form id="reminder-form">
+        <input type="hidden" id="edit-id" />
+        <label>Название
+          <input type="text" id="f-name" required placeholder="Оплата газа" />
+        </label>
+        <label>Категория
+          <select id="f-category">
+            <option value="jkh">ЖКХ</option>
+            <option value="tax">Налоги</option>
+            <option value="school">Школа</option>
+          </select>
+        </label>
+        <label>Дата
+          <input type="date" id="f-date" required />
+        </label>
+        <label>Ответственный
+          <select id="f-person">
+            <option value="Папа">Папа</option>
+            <option value="Мама">Мама</option>
+            <option value="9 класс">9 класс</option>
+            <option value="5 класс">5 класс</option>
+            <option value="3 класс">3 класс</option>
+          </select>
+        </label>
+        <label>Повторение
+          <select id="f-repeat">
+            <option value="none">Разово</option>
+            <option value="monthly">Ежемесячно</option>
+            <option value="yearly">Ежегодно</option>
+          </select>
+        </label>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Сохранить</button>
+          <button type="button" class="btn-secondary" id="closeModal">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
