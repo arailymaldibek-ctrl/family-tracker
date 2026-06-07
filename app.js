@@ -1,3 +1,21 @@
+// ---- members helpers ----
+function getMembers() { return DB.getMembers(); }
+function populatePersonSelects() {
+  const members = getMembers();
+  ['filter-person', 'f-person'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const val = sel.value;
+    sel.innerHTML = id === 'filter-person' ? '<option value="">Все</option>' : '';
+    members.forEach(m => {
+      const o = document.createElement('option');
+      o.value = m.key; o.textContent = `${m.avatar} ${m.key}`;
+      sel.appendChild(o);
+    });
+    sel.value = val;
+  });
+}
+
 // ---- helpers ----
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
@@ -6,13 +24,6 @@ const CAT_LABEL = { jkh: 'ЖКХ', tax: 'Налоги', school: 'Школа' };
 const CAT_ICON  = { jkh: '🏠', tax: '🚗', school: '🎓' };
 const REPEAT_LABEL = { none: 'Разово', monthly: 'Ежемесячно', yearly: 'Ежегодно' };
 
-const MEMBERS = [
-  { key: 'Папа',    avatar: '👨', role: 'Налоги, транспорт, ЖКХ' },
-  { key: 'Мама',    avatar: '👩', role: 'Школа, питание' },
-  { key: '9 класс', avatar: '🎒', role: '9 класс' },
-  { key: '5 класс', avatar: '📚', role: '5 класс' },
-  { key: '3 класс', avatar: '✏️', role: '3 класс' },
-];
 
 function statusOf(r) {
   if (r.done) return { icon: '✅', cls: 'done-status', label: 'Выполнено' };
@@ -56,6 +67,7 @@ function showPage(name) {
   if (name === 'reminders') renderReminders();
   if (name === 'calendar')  renderCalendar();
   if (name === 'family')    renderFamily();
+  if (name === 'settings')  renderSettings();
 }
 
 $$('.nav-btn').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
@@ -212,7 +224,7 @@ function renderFamily() {
   const all = DB.getAll();
   const grid = $('#family-grid');
   grid.innerHTML = '';
-  MEMBERS.forEach(m => {
+  getMembers().forEach(m => {
     const active = all.filter(r => r.person === m.key && !r.done).length;
     const card = document.createElement('div');
     card.className = 'family-card';
@@ -224,6 +236,77 @@ function renderFamily() {
     grid.appendChild(card);
   });
 }
+
+// ---- settings ----
+function renderSettings() {
+  populatePersonSelects();
+  const list = $('#members-list');
+  list.innerHTML = '';
+  getMembers().forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'member-row';
+    row.innerHTML = `
+      <div class="m-avatar">${m.avatar}</div>
+      <div class="m-info">
+        <div class="m-name">${m.key}</div>
+        <div class="m-role">${m.role || ''}</div>
+      </div>
+      <div class="m-actions">
+        <button class="btn-edit mem-edit" data-key="${m.key}">✏️</button>
+        <button class="btn-delete mem-del" data-key="${m.key}">🗑</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+$('#members-list').addEventListener('click', e => {
+  const key = e.target.dataset.key;
+  if (!key) return;
+  if (e.target.classList.contains('mem-del')) {
+    if (confirm(`Удалить «${key}»?`)) { DB.removeMember(key); renderSettings(); renderFamily(); }
+  }
+  if (e.target.classList.contains('mem-edit')) {
+    const m = getMembers().find(x => x.key === key);
+    if (!m) return;
+    $('#member-edit-key').value = m.key;
+    $('#member-name').value = m.key;
+    $('#member-avatar').value = m.avatar;
+    $('#member-role').value = m.role || '';
+    $('#member-submit').textContent = 'Сохранить';
+    $('#member-cancel').style.display = '';
+    $('#member-name').focus();
+  }
+});
+
+$('#member-cancel').addEventListener('click', () => {
+  $('#member-form').reset();
+  $('#member-edit-key').value = '';
+  $('#member-submit').textContent = '+ Добавить';
+  $('#member-cancel').style.display = 'none';
+});
+
+$('#member-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const editKey = $('#member-edit-key').value;
+  const m = {
+    key:    $('#member-name').value.trim(),
+    avatar: $('#member-avatar').value,
+    role:   $('#member-role').value.trim(),
+  };
+  if (!m.key) return;
+  if (editKey) {
+    DB.updateMember(editKey, m);
+  } else {
+    if (getMembers().find(x => x.key === m.key)) { alert('Такое имя уже есть'); return; }
+    DB.addMember(m);
+  }
+  $('#member-form').reset();
+  $('#member-edit-key').value = '';
+  $('#member-submit').textContent = '+ Добавить';
+  $('#member-cancel').style.display = 'none';
+  renderSettings();
+  renderFamily();
+});
 
 // ---- task actions ----
 function bindTaskActions(container) {
@@ -298,4 +381,5 @@ $('#reminder-form').addEventListener('submit', e => {
 });
 
 // ---- init ----
+populatePersonSelects();
 showPage('dashboard');

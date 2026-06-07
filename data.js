@@ -34,6 +34,48 @@ const DB = {
     };
   },
 
+  defaultMembers() {
+    return [
+      { key: 'Папа',    avatar: '👨', role: 'Налоги, транспорт, ЖКХ' },
+      { key: 'Мама',    avatar: '👩', role: 'Школа, питание' },
+      { key: '9 класс', avatar: '🎒', role: '9 класс' },
+      { key: '5 класс', avatar: '📚', role: '5 класс' },
+      { key: '3 класс', avatar: '✏️', role: '3 класс' },
+    ];
+  },
+
+  getMembers() {
+    const data = this.load();
+    if (!data.members) { data.members = this.defaultMembers(); this.save(data); }
+    return data.members;
+  },
+
+  addMember(m) {
+    const data = this.load();
+    if (!data.members) data.members = this.defaultMembers();
+    data.members.push(m);
+    this.save(data);
+  },
+
+  updateMember(oldKey, m) {
+    const data = this.load();
+    if (!data.members) data.members = this.defaultMembers();
+    const i = data.members.findIndex(x => x.key === oldKey);
+    if (i !== -1) {
+      data.members[i] = m;
+      // rename in reminders too
+      data.reminders.forEach(r => { if (r.person === oldKey) r.person = m.key; });
+      this.save(data);
+    }
+  },
+
+  removeMember(key) {
+    const data = this.load();
+    if (!data.members) data.members = this.defaultMembers();
+    data.members = data.members.filter(m => m.key !== key);
+    this.save(data);
+  },
+
   getAll() { return this.load().reminders; },
 
   add(r) {

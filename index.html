@@ -14,6 +14,7 @@
       <button class="nav-btn" data-page="reminders">Напоминания</button>
       <button class="nav-btn" data-page="calendar">Календарь</button>
       <button class="nav-btn" data-page="family">Семья</button>
+      <button class="nav-btn" data-page="settings">⚙️ Настройки</button>
     </nav>
     <button class="btn-primary" id="openModal">+ Добавить</button>
   </header>
@@ -64,6 +65,30 @@
   <main id="page-family" class="page">
     <h1>Семья</h1>
     <div class="family-grid" id="family-grid"></div>
+  </main>
+
+  <!-- SETTINGS -->
+  <main id="page-settings" class="page">
+    <h1>⚙️ Настройки — Члены семьи</h1>
+    <div class="settings-section">
+      <div class="members-list" id="members-list"></div>
+      <form id="member-form" class="member-add-form">
+        <input type="hidden" id="member-edit-key" />
+        <input type="text" id="member-name" placeholder="Имя (например: Бабушка)" required />
+        <select id="member-avatar">
+          <option value="👨">👨 Мужчина</option>
+          <option value="👩">👩 Женщина</option>
+          <option value="🧒">🧒 Ребёнок</option>
+          <option value="🎒">🎒 Школьник</option>
+          <option value="👴">👴 Дедушка</option>
+          <option value="👵">👵 Бабушка</option>
+          <option value="🧑">🧑 Подросток</option>
+        </select>
+        <input type="text" id="member-role" placeholder="Роль (например: Школа, питание)" />
+        <button type="submit" class="btn-primary" id="member-submit">+ Добавить</button>
+        <button type="button" class="btn-secondary" id="member-cancel" style="display:none">Отмена</button>
+      </form>
+    </div>
   </main>
 
   <!-- MODAL -->

@@ -175,6 +175,31 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 
 .empty { color: var(--muted); font-size: 14px; padding: 20px 0; text-align: center; }
 
+/* SETTINGS */
+.settings-section { max-width: 560px; }
+.members-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.member-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.member-row .m-avatar { font-size: 28px; }
+.member-row .m-info { flex: 1; }
+.member-row .m-name { font-weight: 600; }
+.member-row .m-role { font-size: 13px; color: var(--muted); }
+.member-row .m-actions { display: flex; gap: 6px; }
+.member-add-form {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.member-add-form input, .member-add-form select {
+  padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 14px; background: var(--bg); color: var(--text);
+}
+.member-add-form input[type=text] { flex: 1; min-width: 150px; }
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .header { padding: 10px 14px; }
